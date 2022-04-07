@@ -1,0 +1,38 @@
+select worker.title
+from worker
+left join worker as chief
+on worker.chief_id = chief.worker_id
+where worker.salary > chief.salary;
+
+select worker.title
+from worker
+group by department_id
+having max(worker.salary);
+
+select department.title
+from department
+left join worker
+on department.department_id = worker.department_id
+group by department.department_id
+having count(worker_id) <= 3;
+
+select * 
+from worker
+left join worker as chief
+on worker.chief_id = chief.worker_id
+where chief.department_id <> worker.department_id;
+
+select department.department_id, department.title, sum(salary) as salary
+from department
+left join worker
+on department.department_id = worker.department_id
+group by department.department_id
+having salary = (
+	select max(salary) from (
+		select department.department_id, department.title, sum(salary) as salary
+		from department
+		left join worker
+		on department.department_id = worker.department_id
+		group by department.department_id
+		) as department_salary
+);
