@@ -27,12 +27,12 @@ on worker.chief_id = chief.worker_id
 where chief.department_id <> worker.department_id;
 
 -- 5. Вывести список названий отделов с максимальной суммарной заплатой сотрудников
-select department.department_id, department.title, sum(salary) as salary
+select department.title
 from department
 left join worker
 on department.department_id = worker.department_id
 group by department.department_id
-having salary = (
+having sum(salary) = (
 	select max(salary) from (
 		select department.department_id, department.title, sum(salary) as salary
 		from department
